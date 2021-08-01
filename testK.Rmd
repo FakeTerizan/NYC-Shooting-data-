@@ -1,0 +1,102 @@
+---
+title: "NYPD Shooting Incidents"
+author: "Abdulla Alneyadi"
+date: "7/18/2021"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction 
+In this assignment, I am going to explore the NYPD Shooting Incidents. I am mainly interested in finding the heat maps of those incidents. 
+
+
+
+## Importing my data
+
+In order to import the I copy the link address of the dataset by clicking on the csv.
+url_in <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
+
+## Tidying my data
+
+I am interested to explore the heat maps in the shooting incidents. First of all, I noticed that the column OCCUR_DATE was a character type, and I noticed it by the commands below :
+
+test <- data.frame(`NYPD_Shooting_Incident_Data__Historic_.(1)`)
+test
+test$OCCUR_DATE
+typeof(test$OCCUR_DATE)
+[1] "character"
+
+Now I will drop all cells marked as NULL by the command below :
+
+test <- na.omit(test)
+na.omit
+
+function (object, ...) 
+UseMethod("na.omit")
+<bytecode: 0x00000171bf518e98>
+<environment: namespace:stats>
+
+
+
+## Visualizations & Analysis
+
+For this study I was intersted to see which BORO had the largest incident from looking at the data I found out that BROOKLYN , Male and age group 15-44 was the most heated data in this study, I used the below command: 
+
+NYC_heatmap <- test %>%
+  group_by(INCIDENT_KEY, BORO) %>%
+  select(INCIDENT_KEY, BORO,  VIC_SEX, VIC_AGE_GROUP) %>%
+  ungroup()
+  
+# A tibble: 23,566 x 4
+   INCIDENT_KEY BORO          VIC_SEX VIC_AGE_GROUP
+          <int> <chr>         <chr>   <chr>        
+ 1    201575314 QUEENS        M       25-44        
+ 2    205748546 BRONX         F       25-44        
+ 3    193118596 MANHATTAN     M       18-24        
+ 4    204192600 STATEN ISLAND F       25-44        
+ 5    201483468 BRONX         M       18-24        
+ 6    198255460 BROOKLYN      M       25-44        
+ 7    194570529 BROOKLYN      M       25-44        
+ 8    203211777 BROOKLYN      M       25-44        
+ 9    193694863 QUEENS        M       25-44        
+10    199582060 BROOKLYN      M       25-44 
+
+
+Then I used Tail command just to be sure where are we going with this study:
+
+tail(NYC_heatmap)
+# A tibble: 6 x 4
+  INCIDENT_KEY BORO      VIC_SEX VIC_AGE_GROUP
+         <int> <chr>     <chr>   <chr>        
+1    216746166 MANHATTAN M       25-44        
+2    216936948 BRONX     M       45-64        
+3    214926175 QUEENS    M       <18          
+4    220870730 BROOKLYN  M       45-64        
+5    208187330 BRONX     M       45-64        
+6    220848244 BROOKLYN  M       25-44 
+
+
+
+
+I started to analyzing the data by basically seeing the plot when do a count of the BORO as below:
+
+counts <- NYC_heatmap %>%
+  count(BORO)
+ggplot(data = counts, aes(x = BORO, y = n, group = 1)) + geom_line()
+
+Then I started to see the age group coloration with the sex, but for some reason I couldnt make a link between the age and sex , I feel the age group is so huge to explore findings.
+
+
+## Bias
+
+I lived for couple years in New York , I remember seeing the police collect bias data based on a system m media or race, Sometimes bias keep us accurate  and fear which will give more right approach to explore the data from another point of view to get unbiased results. I feel the bias in my study is that I looked at age and race based on one angel point of view, I didnt look at it from a police view. 
+
+
+## Conclusion
+
+In this study I explored the data set from NYPD Shooting Incidents. I imported the data & tidying and transform it. Also I apllied analyzing of the data based on age , race and Boro.
